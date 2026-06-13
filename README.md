@@ -2,6 +2,14 @@
 
 A hybrid movie recommendation system built on the MovieLens 100K dataset. The project contains a Java prototype for generating recommendations and a Python notebook for model evaluation and comparison.
 
+## Highlights
+
+- Uses the full MovieLens 100K dataset instead of a toy catalog.
+- Implements content-based, collaborative, hybrid, and matrix-factorization approaches.
+- Compares models against simple baselines before claiming improvement.
+- Reports both rating-prediction and top-N ranking metrics.
+- Includes a configurable Java demo and an end-to-end Python evaluation notebook.
+
 ## Overview
 
 This project demonstrates three recommendation approaches:
@@ -59,6 +67,7 @@ The Java prototype reads:
 |   +-- Similarity.java
 |   +-- User.java
 +-- movie_recommendation_mlss.ipynb
++-- PROJECT_SUMMARY.md
 +-- requirements.txt
 +-- README.md
 ```
@@ -88,6 +97,18 @@ From the repository root:
 ```bash
 javac src/*.java
 java -cp src Main
+```
+
+You can also pass custom demo parameters:
+
+```bash
+java -cp src Main <userId> <movieId> <topK> <alpha>
+```
+
+Example:
+
+```bash
+java -cp src Main 1 1 10 0.85
 ```
 
 Expected output starts like this:
@@ -141,6 +162,13 @@ For the Python notebook: yes, the notebook trains and evaluates models such as m
 - Combined multiple recommendation signals in a hybrid model
 - Used baseline models before moving to matrix factorization
 - Evaluated recommendations with both prediction and ranking metrics
+
+## Limitations and Next Steps
+
+- The Java recommender is an interpretable prototype, not a production service.
+- The notebook uses a random train-test split for rating prediction; a timestamp split would better simulate future recommendations.
+- Matrix factorization is optimized for RMSE, while real products usually need ranking-aware objectives.
+- Natural next steps include BPR, implicit-feedback ALS, validation-based hyperparameter tuning, and richer metadata features.
 
 ## Tech Stack
 

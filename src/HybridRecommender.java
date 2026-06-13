@@ -9,7 +9,7 @@ public class HybridRecommender {
 
     public HybridRecommender(ContentBasedRecommender contentRec,
                              CollaborativeRecommender collabRec) {
-        this(contentRec, collabRec, 0.6);
+        this(contentRec, collabRec, 0.85);
     }
 
     public HybridRecommender(ContentBasedRecommender contentRec,
@@ -44,7 +44,7 @@ public class HybridRecommender {
         }
 
         return combinedScores.entrySet().stream()
-                .sorted(Map.Entry.<Integer, Double>comparingByValue(Comparator.reverseOrder()))
+                .sorted(this::compareScoreEntries)
                 .limit(topK)
                 .map(entry -> contentRec.getMovie(entry.getKey()))
                 .filter(Objects::nonNull)
@@ -56,5 +56,23 @@ public class HybridRecommender {
             return 0;
         }
         return Math.max(0, Math.min(1, (rating - 1.0) / 4.0));
+    }
+
+    private int compareScoreEntries(Map.Entry<Integer, Double> left,
+                                    Map.Entry<Integer, Double> right) {
+        int scoreCompare = Double.compare(right.getValue(), left.getValue());
+        if (scoreCompare != 0) {
+            return scoreCompare;
+        }
+
+        Movie leftMovie = contentRec.getMovie(left.getKey());
+        Movie rightMovie = contentRec.getMovie(right.getKey());
+        if (leftMovie != null && rightMovie != null) {
+            int titleCompare = leftMovie.getTitle().compareTo(rightMovie.getTitle());
+            if (titleCompare != 0) {
+                return titleCompare;
+            }
+        }
+        return Integer.compare(left.getKey(), right.getKey());
     }
 }

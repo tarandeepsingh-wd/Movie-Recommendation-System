@@ -95,7 +95,7 @@ public class CollaborativeRecommender {
         return weightedSum.entrySet().stream()
                 .filter(entry -> supportCount.getOrDefault(entry.getKey(), 0) >= MIN_NEIGHBOR_SUPPORT)
                 .map(entry -> Map.entry(entry.getKey(), clampRating(userMean + entry.getValue() / Math.max(1e-8, weightSum.getOrDefault(entry.getKey(), 1.0)))))
-                .sorted(Map.Entry.<Integer, Double>comparingByValue(Comparator.reverseOrder()))
+                .sorted(this::compareScoreEntries)
                 .limit(topK)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (a, b) -> a, LinkedHashMap::new));
@@ -128,6 +128,15 @@ public class CollaborativeRecommender {
 
     private double clampRating(double rating) {
         return Math.max(1.0, Math.min(5.0, rating));
+    }
+
+    private int compareScoreEntries(Map.Entry<Integer, Double> left,
+                                    Map.Entry<Integer, Double> right) {
+        int scoreCompare = Double.compare(right.getValue(), left.getValue());
+        if (scoreCompare != 0) {
+            return scoreCompare;
+        }
+        return Integer.compare(left.getKey(), right.getKey());
     }
 
     private static class UserSimilarity {
