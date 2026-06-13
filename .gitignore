@@ -1,0 +1,16 @@
+### IntelliJ IDEA ###
+.idea/
+*.iml
+out/
+
+### Java ###
+*.class
+
+### VS Code ###
+.vscode/
+
+### macOS ###
+.DS_Store
+
+### Duplicate local copy ###
+Movie Recommendation/
